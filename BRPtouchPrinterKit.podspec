@@ -17,15 +17,12 @@ Pod::Spec.new do |s|
 
   s.name         = "BRPtouchPrinterKit"
   s.version      = "1.2.6"
-  s.summary      = "A short description of BRPtouchPrinterKit."
+  s.summary      = "Brother Print SDK for iPhone/iPad."
 
   s.description  = <<-DESC
-                   A longer description of BRPtouchPrinterKit in Markdown format.
+                   A pod setup for the Brother Print SDK for iPhone/iPad.
 
-                   * Think: Why did you write this? What is the focus? What does it do?
-                   * CocoaPods will be using this to generate tags, and improve search results.
-                   * Try to keep it short, snappy and to the point.
-                   * Finally, don't worry about the indent, CocoaPods strips it!
+                   * For sample project and more detailed page, check out: http://www.brother.com/product/dev/mobile/ios/
                    DESC
 
   s.homepage     = "http://www.brother.com/product/dev/mobile/ios/"
@@ -40,7 +37,7 @@ Pod::Spec.new do |s|
   #
 
   # s.license      = "MIT (example)"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+  s.license      = { :type => "CUSTOM" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -53,10 +50,8 @@ Pod::Spec.new do |s|
   #  profile URL.
   #
 
-  s.author             = { "Siong" => "siong1987@gmail.com" }
-  # Or just: s.author    = "Siong"
-  # s.authors            = { "Siong" => "siong1987@gmail.com" }
-  # s.social_media_url   = "http://twitter.com/Siong"
+  s.author             = { "Teng Siong Ong" => "siong1987@gmail.com" }
+  s.social_media_url   = "http://twitter.com/siong1987"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
