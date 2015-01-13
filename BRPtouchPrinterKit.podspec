@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                    A pod setup for the Brother Print SDK for iPhone/iPad.
 
-                   * For sample project and more detailed page, check out: http://www.brother.com/product/dev/mobile/ios/
+                   For sample projects and more detailed product page, check out: http://www.brother.com/product/dev/mobile/ios/
                    DESC
 
   s.homepage     = "http://www.brother.com/product/dev/mobile/ios/"
@@ -60,7 +60,7 @@ Pod::Spec.new do |s|
   #
 
   # s.platform     = :ios
-  # s.platform     = :ios, "5.0"
+  s.platform     = :ios, "6.0"
 
   #  When using multiple platforms
   # s.ios.deployment_target = "5.0"
