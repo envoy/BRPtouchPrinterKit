@@ -37,6 +37,7 @@
 }
 
 @property(retain, nonatomic) NSMutableArray* registeredPrinterNames;
+@property(assign, nonatomic) BOOL isEnableIPv6Search;
 
 
 - (int)startSearch: (int)searchTime;

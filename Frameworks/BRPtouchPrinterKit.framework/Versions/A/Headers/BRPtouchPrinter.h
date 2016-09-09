@@ -93,8 +93,8 @@ typedef enum {
     TYPE_G,
     TYPE_g
 } RASTER_GRAPHIC_TYPE;
-PRINTER_SERIES      printerSeries;
-RASTER_GRAPHIC_TYPE rasterGraphicType;
+static PRINTER_SERIES      printerSeries;
+static RASTER_GRAPHIC_TYPE rasterGraphicType;
 @interface BRPtouchPrinter : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
 {	
 	NSMutableString*		strIPAddress;

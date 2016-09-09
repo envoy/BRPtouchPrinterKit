@@ -19,15 +19,15 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.7</string>
+	<string>1.2.8</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>19</string>
+	<string>22</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (C) 2012-2014 Brother Industries, Ltd. All rights reserved.</string>
+	<string>Copyright (C) 2012-2016 Brother Industries, Ltd. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
 </dict>
