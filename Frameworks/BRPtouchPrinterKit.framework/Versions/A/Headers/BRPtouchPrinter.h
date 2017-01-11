@@ -14,10 +14,7 @@
 #include "BRPtouchPrintInfo.h"
 #include "BRPtouchPrinterData.h"
 
-#import "PTDData.h"
-#import "BrPtPJ673_def.h"
-
-//  各種モード設定フラグ
+//  Cut Mode
 #define FLAG_M_AUTOCUT  0x40
 #define FLAG_M_MIRROR   0x80
 
@@ -30,21 +27,100 @@
 #define FLAG_K_HGPRINT  0x40
 #define FLAG_K_COPY     0x80
 
-//  印刷情報指令フラグ
-#define FLAG_PI_KIND    0x02
-#define FLAG_PI_WIDTH   0x04
-#define FLAG_PI_LENGTH  0x08
-#define FLAU_PI_RECOVER 0x80
+//  Error Code
+#define ERROR_NONE_          0
+#define ERROR_TIMEOUT		-3
+#define ERROR_BADPAPERRES	-4
+#define ERROR_IMAGELARGE	-6
+#define ERROR_CREATESTREAM	-7
+#define ERROR_OPENSTREAM	-8
+#define ERROR_FILENOTEXIST  -9
+#define ERROR_PAGERANGEERROR  -10
+#define ERROR_NOT_SAME_MODEL_ -11
+#define ERROR_BROTHER_PRINTER_NOT_FOUND_ -12
+#define ERROR_PAPER_EMPTY_ -13
+#define ERROR_BATTERY_EMPTY_ -14
+#define ERROR_COMMUNICATION_ERROR_ -15
+#define ERROR_OVERHEAT_ -16
+#define ERROR_PAPER_JAM_ -17
+#define ERROR_HIGH_VOLTAGE_ADAPTER_ -18
+#define ERROR_CHANGE_CASSETTE_ -19
+#define ERROR_FEED_OR_CASSETTE_EMPTY_ -20
+#define ERROR_SYSTEM_ERROR_ -21
+#define ERROR_NO_CASSETTE_ -22
+#define ERROR_WRONG_CASSENDTE_DIRECT_ -23
+#define ERROR_CREATE_SOCKET_FAILED_ -24
+#define ERROR_CONNECT_SOCKET_FAILED_ -25
+#define ERROR_GET_OUTPUT_STREAM_FAILED_ -26
+#define ERROR_GET_INPUT_STREAM_FAILED_ -27
+#define ERROR_CLOSE_SOCKET_FAILED_ -28
+#define ERROR_OUT_OF_MEMORY_ -29
+#define ERROR_SET_OVER_MARGIN_ -30
+#define ERROR_NO_SD_CARD_ -31
+#define ERROR_FILE_NOT_SUPPORTED_ -32
+#define ERROR_EVALUATION_TIMEUP_ -33
+#define ERROR_WRONG_CUSTOM_INFO_ -34
+#define ERROR_NO_ADDRESS_ -35
+#define ERROR_NOT_MATCH_ADDRESS_ -36
+#define ERROR_FILE_NOT_FOUND_ -37
+#define ERROR_TEMPLATE_FILE_NOT_MATCH_MODEL_ -38
+#define ERROR_TEMPLATE_NOT_TRANS_MODEL_ -39
+#define ERROR_COVER_OPEN_ -40
+#define ERROR_WRONG_LABEL_ -41
+#define ERROR_PORT_NOT_SUPPORTED_ -42
+#define ERROR_WRONG_TEMPLATE_KEY_ -43
+#define ERROR_BUSY_ -44
+#define ERROR_TEMPLATE_NOT_PRINT_MODEL_ -45
+#define ERROR_CANCEL_ -46
+#define ERROR_PRINTER_SETTING_NOT_SUPPORTED_ -47
+#define ERROR_INVALID_PARAMETER_ -48
+#define ERROR_INTERNAL_ERROR_ -49
+#define ERROR_TEMPLATE_NOT_CONTROL_MODEL_ -50
+#define ERROR_TEMPLATE_NOT_EXIST_ -51
+#define ERROR_BADENCRYPT_ -52 // This does not occur in iOS
+#define ERROR_BUFFER_FULL_ -53
+#define ERROR_TUBE_EMPTY_ -54
+#define ERROR_TUBE_RIBON_EMPTY_ -55
+#define ERROR_UPDATE_FRIM_NOT_SUPPORTED_ -56 // This does not occur in iOS
+#define ERROR_OS_VERSION_NOT_SUPPORTED_ -57 // This does not occur in iOS
 
-//  Timeout Error
-#define ERROR_TIMEOUT		-3		//	通信タイムアウト
-#define ERROR_BADPAPERRES	-4		//	用紙情報（PTD）が不正、読み込めない、または用紙指定がおかしい
-#define ERROR_BADENCRYPT	-5		//	暗号化指定なのに暗号化キーが指定されていない
-#define ERROR_IMAGELARGE	-6		//	イメージが用紙サイズよりも大きい
-#define ERROR_CREATESTREAM	-7		//	ストリームの作成に失敗
-#define ERROR_OPENSTREAM	-8		//	ストリームのオープンに失敗
-#define ERROR_FILENOTEXIST  -9      //  印刷対象のファイルが存在しない
-#define ERROR_PAGERANGEERROR  -10      //  指定するページが正しくない
+//  Message value
+#define MESSAGE_START_COMMUNICATION_ 1
+#define MESSAGE_START_CONNECT_ 2
+#define MESSAGE_END_CONNECTED_ 3
+//#define MESSAGE_START_GET_OUTPUT_STREAM 4 // Not Available
+//#define MESSAGE_END_GET_OUTPUT_STREAM 5 // Not Available
+//#define MESSAGE_START_GET_INPUT_STREAM 6 // Not Available
+//#define MESSAGE_END_GET_INPUT_STREAM 7 // Not Available
+#define MESSAGE_START_SEND_STATUS_REQUEST_ 8
+#define MESSAGE_END_SEND_STATUS_REQUEST_ 9
+#define MESSAGE_START_READ_PRINTER_STATUS_ 10
+#define MESSAGE_END_READ_PRINTER_STATUS_ 11
+#define MESSAGE_START_CREATE_DATA_ 12
+#define MESSAGE_END_CREATE_DATA_ 13
+#define MESSAGE_START_SEND_DATA_ 14
+#define MESSAGE_END_SEND_DATA_ 15
+#define MESSAGE_START_SEND_TEMPLATE_ 16
+#define MESSAGE_END_SEND_TEMPLATE_ 17
+#define MESSAGE_START_SOCKET_CLOSE_ 18
+#define MESSAGE_END_SOCKET_CLOSE_ 19
+//#define MESSAGE_END_COMMUNICATION 20 // Not Available
+#define MESSAGE_PRINT_COMPLETE_ 21
+#define MESSAGE_PRINT_ERROR_ 22
+#define MESSAGE_PAPER_EMPTY_ 23
+#define MESSAGE_START_COOLING_ 24
+#define MESSAGE_END_COOLING_ 25
+//#define MESSAGE_PREPARATION 26 // Not Available
+#define MESSAGE_WAIT_PEEL_ 27
+#define MESSAGE_START_UPDATE_BLUETOOTH_SETTING_ 28
+#define MESSAGE_END_UPDATE_BLUETOOTH_SETTING_ 29
+#define MESSAGE_START_GET_BLUETOOTH_SETTING_ 30
+#define MESSAGE_END_GET_BLUETOOTH_SETTING_ 31
+#define MESSAGE_START_GET_TEMPLATE_LIST_ 32
+#define MESSAGE_END_GET_TEMPLATE_LIST_ 33
+#define MESSAGE_START_REMOVE_TEMPLATE_LIST_ 34
+#define MESSAGE_END_REMOVE_TEMPLATE_LIST_ 35
+#define MESSAGE_CANCEL_ 36
 
 //  Return value
 #define RET_FALSE       0
@@ -52,109 +128,98 @@
 
 //
 typedef struct _PTSTATUSINFO {
-	Byte	byHead;						// ヘッドマーク
-	Byte	bySize;						// サイズ
-	Byte	byBrotherCode;				// ブラザーコード
-	Byte	bySeriesCode;				// シリーズコード
-	Byte	byModelCode;				// 機種コード
-	Byte	byNationCode;				// 国別コード
-	Byte	byFiller;					// カバー情報
-	Byte	byFiller2;					// 未使用
-	Byte	byErrorInf;					// エラー情報
-	Byte	byErrorInf2;				// エラー情報２
-	Byte	byMediaWidth;				// メディア幅
-	Byte	byMediaType;				// メディア種類
-	Byte	byColorNum;					// 色数
-	Byte	byFont;						// フォント
-	Byte	byJapanesFont;				// 日本語フォント
-	Byte	byMode;						// モード
-	Byte	byDensity;					// 濃度
-	Byte	byMediaLength;				// メディア長さ
-	Byte	byStatusType;				// ステータス種類
-	Byte	byPhaseType;				// フェーズ種類
-	Byte	byPhaseNoHi;				// フェーズ番号上位バイト
-	Byte	byPhaseNoLow;				// フェーズ番号下位バイト
-	Byte	byNoticeNo;					// 通知番号
-	Byte	byExtByteNum;				// 拡張部バイト数
-    Byte	byLabelColor;				// テープ色情報
-	Byte	byFontColor;				// 文字色情報
-	Byte	byHardWareSetting[4];		// ハードウェア設定
-    Byte	byNoUse[2];                 // 未使用
+	Byte	byHead;						// Head mark
+	Byte	bySize;						// Size
+	Byte	byBrotherCode;				// Brother code
+	Byte	bySeriesCode;				// Serial code
+	Byte	byModelCode;				// Model code
+	Byte	byNationCode;				// Nation code
+	Byte	byFiller;					// information about cover
+	Byte	byFiller2;					// Not used
+	Byte	byErrorInf;					// Error information 1
+	Byte	byErrorInf2;				// Error information 2
+	Byte	byMediaWidth;				// Media width
+	Byte	byMediaType;				// Media type
+	Byte	byColorNum;					// The number of colors
+	Byte	byFont;						// Font
+	Byte	byJapanesFont;				// Japanese font
+	Byte	byMode;						// Mode
+	Byte	byDensity;					// Density
+	Byte	byMediaLength;				// Media Length
+	Byte	byStatusType;				// Status Type
+	Byte	byPhaseType;				// Phase type
+	Byte	byPhaseNoHi;				// Upper bytes of phase number
+	Byte	byPhaseNoLow;				// Lower bytes of phase number
+	Byte	byNoticeNo;					// Notice number
+	Byte	byExtByteNum;				// Total bytes of extended part
+    Byte	byLabelColor;				// Color of label
+	Byte	byFontColor;				// Color of font
+	Byte	byHardWareSetting[4];		// Settings of hardware
+    Byte	byNoUse[2];                 // Not Use
 } PTSTATUSINFO, *LPPTSTATUSINFO;
 
 typedef enum {
-    DEFAULT_SERIES,
-    PT_SERIES,
-    QL_SERIES
-} PRINTER_SERIES;
+    CONNECTION_TYPE_WLAN,
+    CONNECTION_TYPE_BLUETOOTH,
+    CONNECTION_ERROR
+} CONNECTION_TYPE;
 
-typedef enum {
-    TYPE_DEFAULT,
-    TYPE_G,
-    TYPE_g
-} RASTER_GRAPHIC_TYPE;
-static PRINTER_SERIES      printerSeries;
-static RASTER_GRAPHIC_TYPE rasterGraphicType;
+extern NSString *BRWLanConnectBytesWrittenNotification;
+extern NSString *BRBluetoothSessionBytesWrittenNotification;
+extern NSString *BRPtouchPrinterKitMessageNotification;
+
+extern NSString *const BRBytesWrittenKey;
+extern NSString *const BRBytesToWriteKey;
+extern NSString *const BRMessageKey;
+
+
 @interface BRPtouchPrinter : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
-{	
-	NSMutableString*		strIPAddress;
 
-	NSMutableString*		strPrinterName;
-	
-	NSMutableString*		strEncryptKey;
-	NSMutableString*		strEncryptKeyEx;
-	
-	BOOL					bPrintInfo;
-	BOOL					bCustom;
-	
-	BRPtouchPrintInfo*		ppi;				//	印刷情報クラス
-	
-    NSMutableArray*			aryPaperMM;					//  すべてを含む全用紙リスト(mm)
-    NSMutableArray*			aryPaperNoSplitMM;			//  スプリットを省いた用紙リスト(mm)
-	NSMutableArray*			aryPaperNoDiaMM;			//	Diaを省いた用紙リスト(mm)
-	NSMutableArray*			aryPaperNoSplitNoDiaMM;		//	スプリットとDiaを省いた用紙リスト(mm)
-    NSMutableArray*			aryPaperIN;					//  スプリットを含む全用紙リスト(inch)
-    NSMutableArray*			aryPaperNoSplitIN;			//  スプリットを省いた用紙リスト(inch)
-	NSMutableArray*			aryPaperNoDiaIN;			//	Diaを省いた用紙リスト(inch)
-	NSMutableArray*			aryPaperNoSplitNoDiaIN;		//	スプリットとDiaを省いた用紙リスト(inch)
-    NSDictionary*			dictPrinterInfo;			//  プリンタ名とPTDファイル名
-
-    LPPTDHEADER				pptdHeader;
-    LPPTDMODELINFO			pptdModelInfo;
-    LPPTDPAPERINFO			pptdPaperInfo;
-    LPPTDPAPERINFO2			pptdPaperInfo2;
-    LPPTDPAPERADDINFO		pptdPaperAddInfo;
-
-    int                 nPrintDataSize;
-    void*               pPrintData;
-	
-	SENSINFO_1			sinfo;
-	
-    NSInputStream*		iStreamEz;
-    NSOutputStream*		oStreamEz;
-	BOOL				bStreamEz;
-
-    int                 modelInfo;
-
-}
-
-- (void)setIPAddress:(NSString*)strIP;
-- (int)sendFile:(NSString*)filePath timeout:(int)nTimeout;
-- (int)sendData:(NSData*)data timeout:(int)nTimeout;
-
-- (int)sendFileEx:(NSString*)strFile timeout:(int)nTimeout;
-- (int)sendDataEx:(NSData*)dataData timeout:(int)nTimeout;
 - (id)initWithPrinterName:(NSString*)strPrinterName;
+- (id)initWithPrinterName:(NSString*)strPrinterName interface:(CONNECTION_TYPE)type;
 - (BOOL)setPrinterName:(NSString*)strPrinterName;
+- (void)setPrintInfo:(BRPtouchPrintInfo*)printInfo;
+- (BOOL)setCustomPaperFile:(NSString*)strFilePath; // Not Available
+//- (BOOL)setEncryptKey:(NSString*)strKey keyEx:(NSString*)strKeyEx; // Not Available
+
 - (BOOL)isPrinterReady;
 - (int)getPTStatus:(PTSTATUSINFO*)status;
-- (int)printImage:(CGImageRef)imageRef copy:(int)nCopy timeout:(int)nTimeout;
-- (int)printPDFAtPath:(NSString *)pdfPath pages:(NSUInteger [])indexes length:(NSUInteger)length copy:(int)nCopy timeout:(int)nTimeout;
-- (int)setPrintInfo:(BRPtouchPrintInfo*)printInfo;
-- (BOOL)setCustomPaperFile:(NSString*)strFilePath;
-- (BOOL)setEncryptKey:(NSString*)strKey keyEx:(NSString*)strKeyEx;
+- (NSString *)getFirmVersion;
 
-- (int)startPrint;
-- (void)endPrint;
+- (BOOL)sendTemplateFile:(NSArray*)sendFileArray;
+- (BOOL)sendFirmwareFile:(NSArray*)sendFileArray;
+
+- (int)sendTemplate:(NSString *)sendtemplateFilePath connectionType:(CONNECTION_TYPE) type;
+
+- (void)setIPAddress:(NSString*)strIP;
+- (void)setupForBluetoothDeviceWithSerialNumber:(NSString*)serialNumber;
+
+/**
+ * Deprecated.
+ * Use startCommunication.
+ **/
+- (int)startPrint __attribute__((deprecated));
+- (BOOL)startCommunication;
+
+/**
+ * Deprecated.
+ * Use endCommunication.
+ **/
+- (void)endPrint __attribute__((deprecated));
+- (void)endCommunication;
+
+- (int)sendFile:(NSString*)filePath;
+- (int)sendData:(NSData*)data;
+- (int)sendFileEx:(NSString*)filePath;
+- (int)sendDataEx:(NSData*)data;
+
+- (int)printPDFAtPath:(NSString *)pdfPath pages:(NSUInteger [])indexes length:(NSUInteger)length copy:(int)nCopy;
+- (int)printImage:(CGImageRef)imageRef copy:(int)nCopy;
+
+- (int)cancelPrinting;
+- (void)setInterface:(CONNECTION_TYPE)strInterface;
+
+- (int) setAutoConnectBluetooth:(BOOL)flag;
+- (int) isAutoConnectBluetooth;
 
 @end

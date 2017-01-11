@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "BRPtouchPrinter.h"
-#import "BRPtouchNetwork.h"
-#import "BRPtouchNetworkInfo.h"
-#import "BrPtPJ673_def.h"
+#import "BRPtouchNetworkManager.h"
+#import "BRPtouchBluetoothManager.h"
+#import "BRPtouchDeviceInfo.h"
 
 @interface BRPtouchPrinterKit : NSObject
 
