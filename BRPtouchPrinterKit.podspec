@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "BRPtouchPrinterKit"
-  s.version      = "3.0.7"
+  s.version      = "3.1.1"
   s.summary      = "Brother Print SDK for iPhone/iPad."
 
   s.description  = <<-DESC
@@ -73,7 +73,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/envoy/BRPtouchPrinterKit.git", :tag => "3.0.7" }
+  s.source       = { :git => "https://github.com/envoy/BRPtouchPrinterKit.git", :tag => "3.1.1" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
