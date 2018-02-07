@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "BRPtouchPrinterKit"
-  s.version      = "3.1.1"
+  s.version      = "3.1.5"
   s.summary      = "Brother Print SDK for iPhone/iPad."
 
   s.description  = <<-DESC
