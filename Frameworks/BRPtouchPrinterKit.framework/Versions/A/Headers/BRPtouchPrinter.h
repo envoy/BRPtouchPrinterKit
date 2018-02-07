@@ -2,8 +2,7 @@
 //  BRPtouchPrinter.h
 //  BRPtouchPrinterKit
 //
-//  Created by BIL on 12/02/03.
-//  Copyright (c) 2012 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,21 +12,8 @@
 
 #include "BRPtouchPrintInfo.h"
 #include "BRPtouchPrinterData.h"
+#include "BRPtouchPrinterStatus.h"
 
-//  Cut Mode
-#define FLAG_M_AUTOCUT  0x40
-#define FLAG_M_MIRROR   0x80
-
-//  拡張モード設定フラグ
-#define FLAG_K_DRAFT    0x01
-#define FLAG_K_HALFCUT  0x04
-#define FLAG_K_NOCHAIN  0x08
-#define FLAG_K_SPTAPE   0x10
-#define FLAG_K_AFTERCUT 0x20
-#define FLAG_K_HGPRINT  0x40
-#define FLAG_K_COPY     0x80
-
-//  Error Code
 #define ERROR_NONE_          0
 #define ERROR_TIMEOUT		-3
 #define ERROR_BADPAPERRES	-4
@@ -83,6 +69,7 @@
 #define ERROR_TUBE_RIBON_EMPTY_ -55
 #define ERROR_UPDATE_FRIM_NOT_SUPPORTED_ -56 // This does not occur in iOS
 #define ERROR_OS_VERSION_NOT_SUPPORTED_ -57 // This does not occur in iOS
+#define ERROR_MINIMUM_LENGTH_LIMIT_ -58
 
 //  Message value
 #define MESSAGE_START_COMMUNICATION_ 1
@@ -122,47 +109,18 @@
 #define MESSAGE_END_REMOVE_TEMPLATE_LIST_ 35
 #define MESSAGE_CANCEL_ 36
 
+
 //  Return value
 #define RET_FALSE       0
 #define RET_TRUE        1
 
 //
-typedef struct _PTSTATUSINFO {
-	Byte	byHead;						// Head mark
-	Byte	bySize;						// Size
-	Byte	byBrotherCode;				// Brother code
-	Byte	bySeriesCode;				// Serial code
-	Byte	byModelCode;				// Model code
-	Byte	byNationCode;				// Nation code
-	Byte	byFiller;					// information about cover
-	Byte	byFiller2;					// Not used
-	Byte	byErrorInf;					// Error information 1
-	Byte	byErrorInf2;				// Error information 2
-	Byte	byMediaWidth;				// Media width
-	Byte	byMediaType;				// Media type
-	Byte	byColorNum;					// The number of colors
-	Byte	byFont;						// Font
-	Byte	byJapanesFont;				// Japanese font
-	Byte	byMode;						// Mode
-	Byte	byDensity;					// Density
-	Byte	byMediaLength;				// Media Length
-	Byte	byStatusType;				// Status Type
-	Byte	byPhaseType;				// Phase type
-	Byte	byPhaseNoHi;				// Upper bytes of phase number
-	Byte	byPhaseNoLow;				// Lower bytes of phase number
-	Byte	byNoticeNo;					// Notice number
-	Byte	byExtByteNum;				// Total bytes of extended part
-    Byte	byLabelColor;				// Color of label
-	Byte	byFontColor;				// Color of font
-	Byte	byHardWareSetting[4];		// Settings of hardware
-    Byte	byNoUse[2];                 // Not Use
-} PTSTATUSINFO, *LPPTSTATUSINFO;
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, CONNECTION_TYPE) {
     CONNECTION_TYPE_WLAN,
     CONNECTION_TYPE_BLUETOOTH,
-    CONNECTION_ERROR
-} CONNECTION_TYPE;
+    CONNECTION_TYPE_ERROR
+};
 
 extern NSString *BRWLanConnectBytesWrittenNotification;
 extern NSString *BRBluetoothSessionBytesWrittenNotification;

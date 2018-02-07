@@ -2,8 +2,7 @@
 //  BRPtouchPrintInfo.h
 //  BRPtouchPrinterKit
 //
-//  Created by BIL on 12/06/26.
-//  Copyright (c) 2012 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -69,11 +68,6 @@
 #define	EXT_PJ673_EPR			0x20
 #define EXT_PJ700_FP            0x40
 
-//  Image processing Setting
-#define HALFTONE_BINARY    0x00
-#define HALFTONE_DITHER    0x01
-#define HALFTONE_ERRDIF    0x02
-
 //　圧縮モードフラグ
 #define COMPRESS_ID         0x4D
 #define COMPRESS_DISABLED   0x00
@@ -83,6 +77,16 @@
 #define PJROLLCASE_OFF 1  //Do not user printer case
 #define PJROLLCASE_ON 2  //Use printer case with anti-curling mechanism
 #define PJROLLCASE_WITH_ANTICURL 3   // Use printer case without anti-curling mechanism
+
+//用紙種類
+#define PJ_ROLL 0x01
+#define PJ_CUT_PAPER 0x02
+
+//Print Quality
+#define PRINTQUALITY_LOW_RESOLUTION 1 // 高速
+#define PRINTQUALITY_NORMAL 2 // ノーマル(高品質)
+#define PRINTQUALITY_DOUBLE_SPEED 3 // ノーマル(高速)
+#define PRINTQUALITY_HIGH_RESOLUTION 4 // 高品質
 
 @interface BRPtouchPrintInfo : NSObject
 
@@ -118,5 +122,9 @@
 @property   (assign,nonatomic)BOOL              bPeel;
 @property   (assign,nonatomic)BOOL              bCutMark;
 @property   (assign,nonatomic)int               nLabelMargine;
+@property   (assign,nonatomic)int               nPJPaperKind;
+@property   (assign,nonatomic)int               nPrintQuality;
+@property   (assign,nonatomic)BOOL              bMode9;
+@property   (assign,nonatomic)BOOL              bRawMode;
 
 @end
