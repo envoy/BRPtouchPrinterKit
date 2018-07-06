@@ -2,7 +2,7 @@
 //  BRPtouchDevice.h
 //  BRSearchModule
 //
-//  Copyright (c) 2017 Brother. All rights reserved.
+//  Copyright (c) 2015-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -16,6 +16,7 @@
 @property	(copy,nonatomic)NSString*	strSerialNumber;
 @property	(copy,nonatomic)NSString*	strNodeName;
 @property	(copy,nonatomic)NSString*	strMACAddress;
+@property   (copy,nonatomic)NSString*   strBLEAdvertiseLocalName;
 
 - (NSString *)description;
 

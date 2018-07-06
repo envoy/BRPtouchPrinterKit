@@ -2,7 +2,7 @@
 //  BRPtouchBluetoothManager.h
 //  BRSearchModule
 //
-//  Copyright (c) 2017 Brother. All rights reserved.
+//  Copyright (c) 2015-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 

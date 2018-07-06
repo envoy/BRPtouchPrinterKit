@@ -2,7 +2,7 @@
 //  BRPtouchPrinter.h
 //  BRPtouchPrinterKit
 //
-//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2012-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,6 +13,8 @@
 #include "BRPtouchPrintInfo.h"
 #include "BRPtouchPrinterData.h"
 #include "BRPtouchPrinterStatus.h"
+#include "BRPtouchLabelParam.h"
+#include "BRPtouchLabelInfoStatus.h"
 
 #define ERROR_NONE_          0
 #define ERROR_TIMEOUT		-3
@@ -108,7 +110,55 @@
 #define MESSAGE_START_REMOVE_TEMPLATE_LIST_ 34
 #define MESSAGE_END_REMOVE_TEMPLATE_LIST_ 35
 #define MESSAGE_CANCEL_ 36
+//#define MESSAGE_START_TRANSFER_FIRM_ 39, //Not Available
+//#define MESSAGE_END_TRANSFER_FIRM_ 38, //Not Available
+#define MESSAGE_CHECK_PRINTER_STATUS_WHILE_CHANGE_STATUS_MODE_ON_ 39
 
+typedef NS_ENUM(NSUInteger, PrinterSettingItem) {
+    PSI_NET_BOOTMODE = 1,
+    PSI_NET_INTERFACE = 2,
+    PSI_NET_USED_IPV6 = 3,
+    PSI_NET_PRIORITY_IPV6 = 4,
+    PSI_NET_IPV4_BOOTMETHOD = 5,
+    PSI_NET_STATIC_IPV4ADDRESS = 6,
+    PSI_NET_SUBNETMASK = 7,
+    PSI_NET_GATEWAY = 8,
+    PSI_NET_DNS_IPV4_BOOTMETHOD = 9,
+    PSI_NET_PRIMARY_DNS_IPV4ADDRESS = 10,
+    PSI_NET_SECOND_DNS_IPV4ADDRESS = 11,
+    PSI_NET_IPV6_BOOTMETHOD = 12,
+    PSI_NET_STATIC_IPV6ADDRESS = 13,
+    PSI_NET_PRIMARY_DNS_IPV6ADDRESS = 14,
+    PSI_NET_SECOND_DNS_IPV6ADDRESS = 15,
+    PSI_NET_IPV6ADDRESS_LIST = 16,
+    PSI_NET_COMMUNICATION_MODE = 17,
+    PSI_NET_SSID = 18,
+    PSI_NET_CHANNEL = 19,
+    PSI_NET_AUTHENTICATION_METHOD = 20,
+    PSI_NET_ENCRYPTIONMODE = 21,
+    PSI_NET_WEPKEY = 22,
+    PSI_NET_PASSPHRASE = 23,
+    PSI_NET_USER_ID = 24,
+    PSI_NET_PASSWORD = 25,
+    PSI_NET_NODENAME = 26,
+    PSI_WIRELESSDIRECT_KEY_CREATE_MODE = 27,
+    PSI_WIRELESSDIRECT_SSID = 28,
+    PSI_WIRELESSDIRECT_NETWORK_KEY = 29,
+    PSI_BT_ISDISCOVERABLE = 30,
+    PSI_BT_DEVICENAME = 31,
+    PSI_BT_BOOTMODE = 34,
+    PSI_PRINTER_POWEROFFTIME = 35,
+    PSI_PRINTER_POWEROFFTIME_BATTERY = 36,
+    PSI_PRINT_JPEG_HALFTONE = 37,
+    PSI_PRINT_JPEG_SCALE = 38,
+    PSI_PRINT_DENSITY = 39,
+    PSI_PRINT_SPEED = 40,
+    
+    PSI_BT_POWERSAVEMODE = 41,
+    PSI_BT_SSP = 42,
+    PSI_BT_AUTHMODE = 43,
+    PSI_BT_AUTO_CONNECTION = 44,
+} ;
 
 //  Return value
 #define RET_FALSE       0
@@ -118,12 +168,14 @@
 
 typedef NS_ENUM(NSUInteger, CONNECTION_TYPE) {
     CONNECTION_TYPE_WLAN,
-    CONNECTION_TYPE_BLUETOOTH,
+    CONNECTION_TYPE_BLUETOOTH, // Classic Bluetooth
+    CONNECTION_TYPE_BLE, // Bluetooth Low Energy
     CONNECTION_TYPE_ERROR
 };
 
 extern NSString *BRWLanConnectBytesWrittenNotification;
 extern NSString *BRBluetoothSessionBytesWrittenNotification;
+extern NSString *BRBLEBytesWrittenNotification;
 extern NSString *BRPtouchPrinterKitMessageNotification;
 
 extern NSString *const BRBytesWrittenKey;
@@ -133,6 +185,7 @@ extern NSString *const BRMessageKey;
 
 @interface BRPtouchPrinter : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
 
+- (id)initWithPrinterIPAddress:(NSString *)IPAddress;
 - (id)initWithPrinterName:(NSString*)strPrinterName;
 - (id)initWithPrinterName:(NSString*)strPrinterName interface:(CONNECTION_TYPE)type;
 - (BOOL)setPrinterName:(NSString*)strPrinterName;
@@ -141,8 +194,19 @@ extern NSString *const BRMessageKey;
 //- (BOOL)setEncryptKey:(NSString*)strKey keyEx:(NSString*)strKeyEx; // Not Available
 
 - (BOOL)isPrinterReady;
+
+- (NSArray *)getSupportPaperArray;
+- (BRPtouchLabelParam *)getCurrentLabelParam;
+
+- (BRPtouchLabelInfoStatus *)getLabelInfoStatus;
 - (int)getPTStatus:(PTSTATUSINFO*)status;
+- (int)getStatus:(BRPtouchPrinterStatus**)status;
+- (NSString *)getModelName;
 - (NSString *)getFirmVersion;
+- (NSString *)getMediaVersion;
+- (NSString *)getMediaFileVersion:(NSString *)filepath;
+- (NSString *)getDeviceSerialNumber;
+- (int)getSystemReport:(NSString* *)report;
 
 - (BOOL)sendTemplateFile:(NSArray*)sendFileArray;
 - (BOOL)sendFirmwareFile:(NSArray*)sendFileArray;
@@ -151,6 +215,7 @@ extern NSString *const BRMessageKey;
 
 - (void)setIPAddress:(NSString*)strIP;
 - (void)setupForBluetoothDeviceWithSerialNumber:(NSString*)serialNumber;
+- (void)setBLEAdvertiseLocalName:(NSString*)advertiseLocalName;
 
 /**
  * Deprecated.
@@ -173,11 +238,17 @@ extern NSString *const BRMessageKey;
 
 - (int)printPDFAtPath:(NSString *)pdfPath pages:(NSUInteger [])indexes length:(NSUInteger)length copy:(int)nCopy;
 - (int)printImage:(CGImageRef)imageRef copy:(int)nCopy;
+- (int)printFiles:(NSArray *)filePaths copy:(int)nCopy;
 
 - (int)cancelPrinting;
 - (void)setInterface:(CONNECTION_TYPE)strInterface;
 
+- (int)getBatteryStatus;
+- (int)getPrinterBootMode;
 - (int) setAutoConnectBluetooth:(BOOL)flag;
 - (int) isAutoConnectBluetooth;
+
+- (int)setPrinterSettings:(NSDictionary*)printerSettings;
+- (int)getPrinterSettings:(NSDictionary**)printerSettings require:(NSArray*)require;
 
 @end

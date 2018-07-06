@@ -2,7 +2,7 @@
 //  BRPtouchPrintInfo.h
 //  BRPtouchPrinterKit
 //
-//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2012-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,8 +11,10 @@
 #define OPTION_CUTATEND		0x00000002
 
 #define PRINT_ORIGINAL		0x00
-#define PRINT_FIT			0x01
+#define PRINT_FIT			0x01 // Deprecated
 #define PRINT_SCALE			0x02
+#define PRINT_FIT_TO_PAGE	0x03
+#define PRINT_FIT_TO_PAPER	0x04
 
 #define ORI_LANDSCAPE		0x00
 #define ORI_PORTRATE		0x01
@@ -92,12 +94,12 @@
 
 
 @property	(copy,nonatomic)NSString*			strPaperName;
-@property	(assign,nonatomic)unsigned long		ulOption;
 @property	(assign,nonatomic)int				nPrintMode;
 @property	(assign,nonatomic)double            scaleValue;
 @property	(assign,nonatomic)int				nDensity;
 @property	(assign,nonatomic)int				nOrientation;
 @property	(assign,nonatomic)int				nHalftone;
+@property	(assign,nonatomic)int				nHalftoneBinaryThreshold;
 @property	(assign,nonatomic)int				nHorizontalAlign;
 @property	(assign,nonatomic)int				nVerticalAlign;
 @property	(assign,nonatomic)int				nPaperAlign;
@@ -126,5 +128,7 @@
 @property   (assign,nonatomic)int               nPrintQuality;
 @property   (assign,nonatomic)BOOL              bMode9;
 @property   (assign,nonatomic)BOOL              bRawMode;
+@property   (assign,nonatomic)BOOL              bBanishMargin;
+@property   (assign,nonatomic)BOOL              bUseLegacyHalftoneEngine;
 
 @end

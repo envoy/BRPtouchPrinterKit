@@ -2,7 +2,7 @@
 //  BRPtouchNetwork.h
 //  BRPtouchPrinterKit
 //
-//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2012-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
