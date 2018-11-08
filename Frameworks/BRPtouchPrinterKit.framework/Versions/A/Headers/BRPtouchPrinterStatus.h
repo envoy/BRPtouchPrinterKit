@@ -2,7 +2,7 @@
 //  BRPtouchPrinterStatus.h
 //  BRPtouchPrinterKit
 //
-//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2016-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -38,8 +38,21 @@ typedef struct _PTSTATUSINFO {
     Byte	byNoUse[2];                 // Not Use
 } PTSTATUSINFO, *LPPTSTATUSINFO;
 
+typedef NS_ENUM(NSInteger, BRPtouchPrinterStatusBatteryTernary) {
+    BRPtouchPrinterStatusBatteryTernaryUnknown = -1,
+    BRPtouchPrinterStatusBatteryTernaryYes = 1,
+    BRPtouchPrinterStatusBatteryTernaryNo = 0,
+};
 @interface BRPtouchPrinterStatus : NSObject
-@property (nonatomic) PTSTATUSINFO *statusInfo;
-@property (nonatomic) int16_t batteryLevel;
+@property (nonatomic) PTSTATUSINFO statusInfo;
+
+// battery
+@property (nonatomic) int32_t batteryResidualQuantityLevel;
+@property (nonatomic) int32_t maxOfBatteryResidualQuantityLevel;
+
+@property (nonatomic) BRPtouchPrinterStatusBatteryTernary isACConnected;
+@property (nonatomic) BRPtouchPrinterStatusBatteryTernary isBatteryMounted;
+
+@property (nonatomic) int16_t batteryLevel __deprecated;
 
 @end
