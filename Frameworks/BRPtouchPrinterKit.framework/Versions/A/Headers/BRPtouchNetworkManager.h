@@ -2,7 +2,7 @@
 //  BRPtouchNetwork.h
 //  BRPtouchPrinterKit
 //
-//  Copyright (c) 2017 Brother Industries, Ltd. All rights reserved.
+//  Copyright (c) 2012-2018 Brother Industries, Ltd. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,8 +14,6 @@
 #define RET_TRUE        1
 
 @protocol BRPtouchNetworkDelegate;
-
-@class PLNetworkModule;
 
 @interface BRPtouchNetworkManager : NSObject <NSNetServiceBrowserDelegate,NSNetServiceDelegate>
 
@@ -39,6 +37,8 @@
 
 @protocol BRPtouchNetworkDelegate <NSObject>
 
--(void) didFinishSearch:(id)sender;
+- (void)didFinishSearch:(id)sender;
+@optional
+- (void)didFindDevice:(BRPtouchDeviceInfo *)deviceInfo;
 
 @end
