@@ -15,8 +15,8 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "BRPtouchPrinterKit"
-  s.version      = "3.1.9"
+  s.name         = "BRLMPrinterKit"
+  s.version      = "4.3.1"
   s.summary      = "Brother Print SDK for iPhone/iPad."
 
   s.description  = <<-DESC
@@ -60,7 +60,7 @@ Pod::Spec.new do |s|
   #
 
   # s.platform     = :ios
-  s.platform     = :ios, "6.0"
+  s.platform     = :ios, "10.0"
 
   #  When using multiple platforms
   # s.ios.deployment_target = "5.0"
@@ -73,7 +73,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/envoy/BRPtouchPrinterKit.git", :tag => "3.1.9" }
+  s.source       = { :git => "https://github.com/envoy/BRPtouchPrinterKit.git", :tag => s.version }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -84,7 +84,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.ios.vendored_frameworks = 'Frameworks/BRPtouchPrinterKit.framework'
+  s.ios.vendored_frameworks = 'Frameworks/BRLMPrinterKit.xcframework'
 
   # s.public_header_files = "Classes/**/*.h"
 
@@ -110,8 +110,8 @@ Pod::Spec.new do |s|
   #
 
   # s.framework  = "SomeFramework"
-  s.frameworks = "SystemConfiguration", "CFNetwork", "UIKit", "Foundation", "CoreGraphics", "ExternalAccessory", "BRPtouchPrinterKit"
-
+  s.frameworks = "SystemConfiguration", "UIKit", "CoreBluetooth", "ExternalAccessory", "BRLMPrinterKit"
+  s.library   = "c++", "z"
   # s.library   = "iconv"
   # s.libraries = "iconv", "xml2"
 
